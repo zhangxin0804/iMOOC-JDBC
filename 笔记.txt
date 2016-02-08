@@ -4,12 +4,19 @@
 	以mooc网站为例，客户端输入用户名和密码准备登录mooc网，服务器上的应用程序会根据客户端传来的用户名和密码，去用户数据库中查询是否该用户存在以及
 该用户的密码是否匹配，查询结果由数据库传回服务器后，服务器的应用程序再根据查询的结果，给客户端响应不同的页面。
 
+	JDBC是面向关系型数据库!!!!
+
 
 
 2. JDBC（Java DataBase Connectivity,java数据库连接）
 
-	JDBC是一个工具tool,它是一座桥梁连接了Java应用程序和数据库。有了JDBC的话，Java应用程序就可以从数据库中读取数据，也可以往数据库中存储数据。
-不同的数据库都实现了与JDBC有关的接口，体现了Java “编写一次，处处运行”的高大上精神。
+	JDBC是一座桥梁连接了Java应用程序和关系型数据库。有了JDBC的话，Java应用程序就可以从数据库中读取数据，也可以往数据库中存储数据。JDBC提供了
+标准的API应用程序接口，来规范JAVA应用程序如何访问数据库。
+	
+	不同的数据库都实现了与JDBC有关的接口, no need to develop code for different databse, 体现了Java “编写一次，处处运行”的高大上精神。
+
+	只需要编写SQL语句提供给JDBC driver, 然后就会pass on to actual database.
+
 
 
 											Java应用
@@ -24,4 +31,48 @@
 
 
 
-3.  
+3.  JDBC Architecture 
+
+	· JDBC Driver (key component) 比较low level
+	  -- provides connection for application to a database, 提供底层的连接。
+	  -- Converts JDBC API calls to low level calls for specic database
+
+
+	· JDBC Driver implementation
+	  -- provided by database vendor
+
+
+	· JDBC Driver Manager
+	  -- Driver Manager helps to connect an application to database based on the database connection string
+	  -- In JDBC 4.0, the JDBC driver are automatically loaded based on the classpath
+	  -- In legacy JDBC 3.0, drivers have to be explicitly loaded with  
+	     Class.forName(theDriverName)
+
+
+	简而言之，JDBC Driver是比较偏底层的实现，它帮助我们完成了应用程序和数据库的连接，同时能够将API的调用，一层一层往下转化为对数据库的调用
+操作；但是，JDBC Driver它并不是一个在任何JAVA应用程序中都会用到的，因此需要通过JDBC Driver Manager也即JDBC 驱动管理来操作何时是否需要
+load JDBC Driver. 相当于，The basic service for managing a set of JDBC drivers.
+
+
+
+
+4. JDBC API
+
+	JDBC API is defined in the following package: java.sql and javax.sql, 这里是JAVA SE部分就存在的。
+	
+	key classes:
+	· java.sql.DriverManager
+	· java.sql.Connection, 是接口interface
+	· java.sql.Statement, 是接口interface
+	· java.sql.ResultSet, 是接口interface
+	· javax.sql.DataSource (for connection pooling), 是接口interface
+
+
+5.  
+
+
+
+
+
+
+
