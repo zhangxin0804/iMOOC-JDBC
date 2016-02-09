@@ -10,7 +10,7 @@
 2. JDBC（Java DataBase Connectivity,java数据库连接）
 
 	JDBC是一座桥梁连接了Java应用程序和关系型数据库。有了JDBC的话，Java应用程序就可以从数据库中读取、存储、更新、删除数据。JDBC提供了
-标准的API应用程序接口，来规范JAVA应用程序如何访问数据库。
+标准的API应用程序接口JDBC API，来规范JAVA应用程序如何访问数据库。
 	
 	不同的数据库都实现了与JDBC有关的接口,都提供自己相应的JDBC Driver也就是jar包。
 
@@ -36,10 +36,10 @@
 
 	注意： JDBC是一个宏观的概念, 抽象层面的。
 
-	· JDBC Driver (key component), 实际存在的。
+	· JDBC Driver (key component), 实际存在的代码。
 	  -- provides connection to a database, 提供并实现底层的连接。
 	  -- Converts JDBC API calls to low level calls for specic database
-	  -- 实际上就是一个对应数据库官网下载的 jar包
+	  -- 实际上就是一个相关数据库官网下载的 jar包
 
 
 	· JDBC Driver implementation
@@ -51,11 +51,11 @@
 	  -- In JDBC 4.0, the JDBC driver are automatically loaded based on the classpath
 	  -- In legacy JDBC 3.0, drivers have to be explicitly loaded with  
 	     Class.forName(theDriverName)
+	  -- 通过JDBC Driver Manager这个类提供的API, 来调用底层的JDBC Driver驱动，然后 build connection
 
 
 	简而言之，JDBC Driver是比较偏底层的实现，它帮助我们完成了应用程序和数据库的底层连接，同时能够将API的调用，一层一层往下转化为对数据库的调用
-操作；但是，JDBC Driver它并不是一个在任何JAVA应用程序中都会用到的，因此需要通过JDBC Driver Manager也即JDBC 驱动管理来操作何时是否需要
-load JDBC Driver. 相当于，The basic service for managing a set of JDBC drivers.
+操作；但是需要通过处于顶层的JDBC Driver Manager也即JDBC 驱动管理来操作何时是否需要load JDBC Driver. 相当于，The basic service for managing a set of JDBC drivers.
 	
 	JDBC Driver实际上就是一个jar包。
 
@@ -105,7 +105,7 @@ load JDBC Driver. 相当于，The basic service for managing a set of JDBC drive
 			String user = "student";
 			String password = "student";
 
-			Connectin myConn = DriverManager.getConnection(dbURL, user, password);
+			Connection myConn = DriverManager.getConnection(dbURL, user, password);
 			...
 
 		注意：Failure to connect will throw an exception
@@ -117,7 +117,7 @@ load JDBC Driver. 相当于，The basic service for managing a set of JDBC drive
 
 	【2】Create a Statement object.
 
-		· The statement object is based on conncetion
+		· The statement object is based on conncetion, 通过 valid Connection 对象来得到 Statement对象。
 
 		· It will be used later to execute SQL query
 
@@ -209,7 +209,81 @@ load JDBC Driver. 相当于，The basic service for managing a set of JDBC drive
 
 
 
-10. 
+10. Demo 讲解
+
+	/*********************************************************************************************************/
+
+	import java.sql.*;
+
+	public static void main(String[] args) throws SQLException {
+
+		Connection myConn = null;
+		Statement myStmt = null;
+		ResultSet myRs = null;
+		
+		try {
+			// 1. Get a connection to database
+			myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/demo", "student" , "student");
+			
+			System.out.println("Database connection successful!\n");
+			
+			// 2. Create a statement
+			myStmt = myConn.createStatement();
+			
+			// 3. Execute SQL query
+			myRs = myStmt.executeQuery("select * from employees");
+			
+			// 4. Process the result set
+			while (myRs.next()) {
+				System.out.println(myRs.getString("last_name") + ", " + myRs.getString("first_name"));
+			}
+		}
+		catch (Exception exc) {
+			exc.printStackTrace();
+		}
+		finally {
+			if (myRs != null) {
+				myRs.close();
+			}
+			
+			if (myStmt != null) {
+				myStmt.close();
+			}
+			
+			if (myConn != null) {
+				myConn.close();
+			}
+		}
+	}
+
+	/*********************************************************************************************************/
+
+	- 注意：主函数要explicitly declare SQLException, 即要主动throw SQLException
+	- 注意：代码的规范性，抛出异常，捕获异常的处理。 try-catch-finally的用法！！！
+	- 注意：最后 Connection, ResultSet和Statement的 close()方法的含义。
+	- 注意：JDBC URL也即connection string中，最后跟的是 MySQL中的物理Schema的名字！！！
+	- 注意：用户名和密码要保证正确。
+
+
+
+11. Inserting Data into a Database
+
+	方法1：regular SQL
+	INSERT INTO `employees` (`last_name`,`first_name`,`email`, `department`, `salary`) VALUES ('Wright','Eric','eric.wright@foo.com', 'HR', 33000.00);
+
+
+	方法2：嵌套SQL语句在Java中, 利用JDBC技术来完成数据库的插入操作	
+	method: 		int	executeUpdate(String sql)
+	
+	description: 	Executes the given SQL statement, which may be an INSERT, UPDATE, or DELETE statement or an SQL
+				    statement that returns nothing, such as an SQL DDL statement
+	
+	返回值: 			either (1) the row count for SQL Data Manipulation Language (DML) statements or (2) 0 for SQL 
+	                statements that return nothing
+
+
+
+
 
 
 
