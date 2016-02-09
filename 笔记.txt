@@ -113,6 +113,7 @@
 			- java.lang.ClassNotFoundException: JDBC driver not in classpath
 
 
+		注意：default端口号！！！！3306 ！！！！！
 
 
 	【2】Create a Statement object.
@@ -263,6 +264,10 @@
 	- 注意：最后 Connection, ResultSet和Statement的 close()方法的含义。
 	- 注意：JDBC URL也即connection string中，最后跟的是 MySQL中的物理Schema的名字！！！
 	- 注意：用户名和密码要保证正确。
+	- 注意：default端口号！！！！ 3306 ！！！！
+
+
+
 
 
 
@@ -272,7 +277,7 @@
 	INSERT INTO `employees` (`last_name`,`first_name`,`email`, `department`, `salary`) VALUES ('Wright','Eric','eric.wright@foo.com', 'HR', 33000.00);
 
 
-	方法2：嵌套SQL语句在Java中, 利用JDBC技术来完成数据库的插入操作	
+	方法2：嵌套SQL语句在Java中, 利用JDBC技术来完成应用程序对数据库的插入操作	
 	method: 		int	executeUpdate(String sql)
 	
 	description: 	Executes the given SQL statement, which may be an INSERT, UPDATE, or DELETE statement or an SQL
@@ -280,6 +285,27 @@
 	
 	返回值: 			either (1) the row count for SQL Data Manipulation Language (DML) statements or (2) 0 for SQL 
 	                statements that return nothing
+
+
+
+
+
+
+
+
+12. 单表的MySQL的 update 用法
+
+	UPDATE [LOW_PRIORITY] [IGNORE] tbl_name  
+	SET col_name1=expr1 [, col_name2=expr2 ...]  
+	[WHERE where_definition]  
+	[ORDER BY ...]  
+	[LIMIT row_count] 
+
+
+
+
+
+13. 
 
 
 
